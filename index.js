@@ -46,6 +46,7 @@ function constructCard(id, title, labels, posted, users, url) {
   <p>#${id}</p><p>${title}</p>
   ${labels.length > 0 ? createLabels(labels) : ''}
   <div class="card-footer">
+  <i class="fa fa-comment"></i>
   <div class="card-users">${users}</div>
   <div class="card-time">${posted}</div>
   </div>

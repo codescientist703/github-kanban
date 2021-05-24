@@ -12,17 +12,17 @@
       referrerpolicy="no-referrer"
     />
     <link rel="stylesheet" href="index.css" />
-    <title>Github PR and Issue Status</title>
+    <title>Github Kanban Chart</title>
   </head>
   <body>
     <div class="header">
-      <h1>
-        <i class="fas fa-chart-bar main-icon"></i>Github Kanban Chart
-      </h1>
+      <h1><i class="fas fa-chart-bar main-icon"></i>Github Kanban Chart</h1>
     </div>
     <div class="content">
       <h2 class="content-heading">----Select any repository----</h2>
-      <div class="hand-icon"><i class="fas fa-hand-point-down hand-icon"></i></div>
+      <div class="hand-icon">
+        <i class="fas fa-hand-point-down hand-icon"></i>
+      </div>
       <div class="repo-container">
         <input
           list="repos"
@@ -31,7 +31,7 @@
           oninput="onInput()"
         />
         <datalist id="repos">
-          <option value="all"></option>
+          <option value="All Repositories"></option>
         </datalist>
       </div>
       <div class="container">
@@ -67,6 +67,9 @@
         </div>
       </div>
     </div>
+    <footer>
+      <div class="footer-content">Made With &#10084 by <a href="https://github.com/codescientist703" target="_blank">codescientist703</a></div>
+    </footer>
     <script src="config.js"></script>
     <script src="index.js"></script>
   </body>

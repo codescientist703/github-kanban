@@ -24,13 +24,11 @@ p,
 div {
   color: var(--font-color);
 }
-
 h1,
 h2,
 h3 {
   color: var(--font-color);
 }
-
 h1 {
   font-size: 1.5rem;
 }
@@ -41,6 +39,10 @@ ul {
   margin: 0;
   padding: 0;
   list-style: none;
+}
+a {
+  text-decoration: none;
+  color: var(--font-color);
 }
 .header {
   text-align: center;
@@ -59,6 +61,22 @@ ul {
   font-weight: 400;
   margin-bottom: 1rem;
 }
+.hand-icon {
+  margin-bottom: 0.5rem;
+  font-size: 20px;
+  text-align: center;
+}
+
+input {
+  border: 3px solid var(--primary-color);
+  width: 250px;
+  height: 40px;
+  border-radius: 10px;
+  padding: 0.8rem;
+  color: var(--font-color);
+  background: var(--light-bg-color);
+}
+
 .container {
   display: grid;
   grid-template-areas:
@@ -66,8 +84,10 @@ ul {
     'two'
     'three'
     'four';
-  grid-column-gap: 35px;
-  padding: 0rem 1rem;
+  column-gap: 35px;
+  padding: 0rem 2rem;
+  margin-bottom: 2rem;
+  row-gap: 1.5rem;
 }
 .board-col1 {
   grid-area: one;
@@ -87,9 +107,12 @@ ul {
   justify-content: center;
   padding: 0.5rem;
   border: 2px solid var(--primary-color);
+  border-bottom: 0;
+  border-radius: 5px;
 }
 .board-content {
   border: 2px solid var(--primary-color);
+  border-radius: 5px;
 }
 .col-heading {
   margin-right: auto;
@@ -123,8 +146,9 @@ ul {
   margin-bottom: 0.8rem;
 }
 .tag {
-  border-radius: 5px;
+  border-radius: 7px;
   margin: 0.3rem;
+  border: 2px solid rgba(0, 0, 0, 0.5);
   padding: 0.4rem;
 }
 .card-footer {
@@ -132,8 +156,13 @@ ul {
   justify-content: flex-end;
   align-items: center;
 }
+.card-footer i {
+  margin-right: 0.3rem;
+  color: var(--secondary-color);
+}
 .card-users {
   color: var(--secondary-color);
+  margin-right: 0.6rem;
 }
 .card-time {
   color: var(--secondary-color);
@@ -142,21 +171,14 @@ ul {
   display: flex;
   justify-content: center;
   justify-self: center;
-  margin-bottom: 2rem;
+  margin-bottom: 2.2rem;
 }
-.hand-icon {
-  margin-bottom: 0.5rem;
-  font-size: 20px;
-  text-align: center;
-}
-input {
-  border: 3px solid var(--primary-color);
-  width: 250px;
-  height: 40px;
-  border-radius: 10px;
-  padding: 10px;
-  color: var(--font-color);
+footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   background: var(--light-bg-color);
+  padding: 1rem 0;
 }
 @media only screen and (min-width: 768px) {
   .container {
