@@ -14,7 +14,7 @@ fetchGithub()
     console.log(error);
   });
 
-async function fetchGithub(url) {
+async function fetchGithub() {
   const response = await fetch(
     `https://api.github.com/search/issues?q=author%3A${config.user}+archived%3Afalse`
   );

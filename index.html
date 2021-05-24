@@ -17,12 +17,12 @@
   <body>
     <div class="header">
       <h1>
-        <i class="fas fa-chart-bar main-icon"></i>Kanban Chart for status of
-        pull requests and issues.
+        <i class="fas fa-chart-bar main-icon"></i>Github Kanban Chart
       </h1>
     </div>
     <div class="content">
-      <h2 class="content-heading">Choose any repository</h2>
+      <h2 class="content-heading">----Select any repository----</h2>
+      <div class="hand-icon"><i class="fas fa-hand-point-down hand-icon"></i></div>
       <div class="repo-container">
         <input
           list="repos"
@@ -44,7 +44,7 @@
         </div>
         <div class="board-col2">
           <div class="board-header">
-            <i class="fas fa-book-open col-icon"></i>
+            <i class="fas fa-code-branch col-icon"></i>
             <h2 class="col-heading" id="closed-pr-count">
               Closed Pull Requests
             </h2>
@@ -53,14 +53,14 @@
         </div>
         <div class="board-col3">
           <div class="board-header">
-            <i class="fas fa-book-open col-icon"></i>
+            <i class="fas fa-lock-open col-icon"></i>
             <h2 class="col-heading" id="open-issue-count">Open Issues</h2>
           </div>
           <div class="board-content" id="open-issue"></div>
         </div>
         <div class="board-col4">
           <div class="board-header">
-            <i class="fas fa-book-open col-icon"></i>
+            <i class="fas fa-lock col-icon"></i>
             <h2 class="col-heading" id="closed-issue-count">Closed Issues</h2>
           </div>
           <div class="board-content" id="closed-issue"></div>
