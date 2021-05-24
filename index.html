@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+      integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link rel="stylesheet" href="index.css" />
+    <title>Github PR and Issue Status</title>
+  </head>
+  <body>
+    <div class="header">
+      <h1>
+        <i class="fas fa-chart-bar main-icon"></i>Kanban Chart for status of
+        pull requests and issues.
+      </h1>
+    </div>
+    <div class="content">
+      <h2 class="content-heading">Choose any repository</h2>
+      <div class="repo-container">
+        <input
+          list="repos"
+          placeholder="Select any repository"
+          id="input"
+          oninput="onInput()"
+        />
+        <datalist id="repos">
+          <option value="all"></option>
+        </datalist>
+      </div>
+      <div class="container">
+        <div class="board-col1">
+          <div class="board-header">
+            <i class="fas fa-book-open col-icon"></i>
+            <h2 class="col-heading" id="open-pr-count">Open Pull Requests</h2>
+          </div>
+          <div class="board-content" id="open-pr"></div>
+        </div>
+        <div class="board-col2">
+          <div class="board-header">
+            <i class="fas fa-book-open col-icon"></i>
+            <h2 class="col-heading" id="closed-pr-count">
+              Closed Pull Requests
+            </h2>
+          </div>
+          <div class="board-content" id="closed-pr"></div>
+        </div>
+        <div class="board-col3">
+          <div class="board-header">
+            <i class="fas fa-book-open col-icon"></i>
+            <h2 class="col-heading" id="open-issue-count">Open Issues</h2>
+          </div>
+          <div class="board-content" id="open-issue"></div>
+        </div>
+        <div class="board-col4">
+          <div class="board-header">
+            <i class="fas fa-book-open col-icon"></i>
+            <h2 class="col-heading" id="closed-issue-count">Closed Issues</h2>
+          </div>
+          <div class="board-content" id="closed-issue"></div>
+        </div>
+      </div>
+    </div>
+    <script src="config.js"></script>
+    <script src="index.js"></script>
+  </body>
+</html>

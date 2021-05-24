@@ -1,0 +1,131 @@
+@import url('https://fonts.googleapis.com/css2?family=Mulish:wght@400;500;600;700&display=swap');
+
+* {
+  box-sizing: border-box;
+  outline: 0;
+  border: 0;
+  font-family: 'Mulish', sans-serif;
+  margin: 0;
+  padding: 0;
+  scroll-behavior: smooth;
+}
+body {
+  background: rgba(255, 255, 255, 0.807);
+}
+.header {
+  text-align: center;
+  padding: 0.9rem;
+  background: cornsilk;
+  border-bottom: 2px solid red;
+}
+.main-icon {
+  margin-right: 1rem;
+  color: red;
+}
+.content {
+  padding: 1rem;
+}
+.content .content-heading {
+  text-align: center;
+}
+.container {
+  display: grid;
+  grid-template-areas:
+    'one'
+    'two'
+    'three'
+    'four';
+  grid-column-gap: 50px;
+}
+.board-col1 {
+  grid-area: one;
+}
+.board-col2 {
+  grid-area: two;
+}
+.board-col3 {
+  grid-area: three;
+}
+.board-col4 {
+  grid-area: four;
+}
+.board-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem;
+  border: 2px solid blue;
+}
+.board-content {
+  border: 2px solid blue;
+}
+.col-heading {
+  margin-right: auto;
+}
+.col-icon {
+  margin-right: auto;
+  font-size: 20px;
+  padding: 6px;
+  color: red;
+  padding-right: 0.6rem;
+}
+.card {
+  padding: 0.8rem;
+  color: inherit;
+  background: lightblue;
+  margin: 0.4rem;
+}
+.card a {
+  display: block;
+  text-decoration: none;
+  color: initial;
+}
+.card p {
+  margin-bottom: 0.7rem;
+}
+.tag-container {
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 0.8rem;
+}
+.tag {
+  border-radius: 5px;
+  margin: 0.3rem;
+  padding: 0.4rem;
+  background: orange;
+}
+.card-footer {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+.repo-container {
+  display: flex;
+  justify-content: center;
+  justify-self: center;
+  padding: 2.5rem;
+}
+
+input {
+  border: 2px solid red;
+  width: 250px;
+  height: 37px;
+  border-radius: 4px;
+  padding: 10px;
+}
+@media only screen and (min-width: 768px) {
+  .container {
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+      'one two'
+      'three four';
+  }
+}
+
+@media only screen and (min-width: 992px) {
+  .container {
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-areas: 'one two three four';
+    grid-auto-rows: min-content;
+  }
+}

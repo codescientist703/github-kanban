@@ -1,0 +1,11 @@
+{
+  "name": "github-kanban",
+  "version": "1.0.0",
+  "description": "Now check the status of your open and closed pull request in form of kanban chart.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
