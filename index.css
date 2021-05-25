@@ -69,10 +69,11 @@ a {
 
 input {
   border: 3px solid var(--primary-color);
-  width: 250px;
+  width: 100%;
   height: 40px;
   border-radius: 10px;
   padding: 0.8rem;
+  margin: 0rem 1rem;
   color: var(--font-color);
   background: var(--light-bg-color);
 }
@@ -84,8 +85,8 @@ input {
     'two'
     'three'
     'four';
-  column-gap: 35px;
-  padding: 0rem 2rem;
+  column-gap: 1.5rem;
+  padding: 0rem 1rem;
   margin-bottom: 2rem;
   row-gap: 1.5rem;
 }
@@ -150,6 +151,7 @@ input {
   margin: 0.3rem;
   border: 2px solid rgba(0, 0, 0, 0.5);
   padding: 0.4rem;
+  font-size: 15px;
 }
 .card-footer {
   display: flex;
@@ -162,7 +164,7 @@ input {
 }
 .card-users {
   color: var(--secondary-color);
-  margin-right: 0.6rem;
+  margin-right: 0.7rem;
 }
 .card-time {
   color: var(--secondary-color);
@@ -178,7 +180,7 @@ footer {
   justify-content: center;
   align-items: center;
   background: var(--light-bg-color);
-  padding: 1rem 0;
+  padding: 1.2rem 0;
 }
 @media only screen and (min-width: 768px) {
   .container {
@@ -193,6 +195,9 @@ footer {
   h2 {
     font-size: 1.5em;
   }
+  input {
+    width: 270px;
+  }
 }
 
 @media only screen and (min-width: 992px) {
@@ -200,5 +205,6 @@ footer {
     grid-template-columns: 1fr 1fr 1fr 1fr;
     grid-template-areas: 'one two three four';
     grid-auto-rows: min-content;
+    padding: 0rem 1.5rem;
   }
 }

@@ -71,8 +71,10 @@ function createCards(data, repo) {
     console.log(element);
     let recentDate = new Date(element.created_at);
     const newDate =
+      recentDate.getUTCDate() +
+      '-' +
       recentDate.toLocaleString('default', { month: 'short' }) +
-      ' ' +
+      '-' +
       recentDate.getUTCFullYear();
     const cardString = constructCard(
       element.number,
