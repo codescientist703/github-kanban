@@ -28,3 +28,5 @@ In the URL type https://codescientist703.github.io/github-kanban/?user=your_user
 - JavaScript - For all the logic
 
 ### All contributions are welcomed !
+
+### Please also consider giving it a star if you find it useful :)
