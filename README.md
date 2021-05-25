@@ -19,7 +19,7 @@
 
 [https://codescientist703.github.io/github-kanban/](https://codescientist703.github.io/github-kanban/)
 
-In the URL type https://codescientist703.github.io/github-kanban/?user=your_username and replace your_username with your github username to get your own personalized page which you show off to anyone.
+In the URL type https://codescientist703.github.io/github-kanban/?user=your_username and replace your_username with your github username to get your own personalized page which you can show off to anyone.
 
 ## Built with
 
