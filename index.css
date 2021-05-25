@@ -44,6 +44,9 @@ a {
   text-decoration: none;
   color: var(--font-color);
 }
+
+/* Header Component  */
+
 .header {
   text-align: center;
   padding: 0.9rem;
@@ -77,6 +80,8 @@ input {
   color: var(--font-color);
   background: var(--light-bg-color);
 }
+
+/* Grid and container component */
 
 .container {
   display: grid;
@@ -126,6 +131,9 @@ input {
   color: var(--secondary-color);
   padding-right: 0.6rem;
 }
+
+/* Card Component */
+
 .card {
   padding: 0.8rem;
   color: inherit;
@@ -175,6 +183,9 @@ input {
   justify-self: center;
   margin-bottom: 2.2rem;
 }
+
+/* Footer Component */
+
 footer {
   display: flex;
   justify-content: center;
@@ -183,7 +194,7 @@ footer {
   padding: 1.2rem 0;
 }
 
-/* creating css loader */
+/* CSS Loader component */
 
 .loading-container {
   height: 70vh;
@@ -210,6 +221,8 @@ footer {
     transform: rotate(360deg);
   }
 }
+
+/* Media Queries */
 
 @media only screen and (min-width: 768px) {
   .container {
