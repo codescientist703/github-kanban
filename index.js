@@ -3,7 +3,16 @@ const closedPr = document.getElementById('closed-pr');
 const openIssue = document.getElementById('open-issue');
 const closedIssue = document.getElementById('closed-issue');
 const repos = document.getElementById('repos');
+let username;
 let globalData = [];
+
+const params = new URLSearchParams(window.location.search);
+if (params.has('user')) {
+  username = params.get('user');
+} else {
+  username = config.user;
+}
+
 fetchGithub()
   .then((data) => {
     globalData = data.items;
@@ -11,13 +20,12 @@ fetchGithub()
     createDatalist(data.items);
   })
   .catch((error) => {
-    console.log(error);
     displayError(error);
   });
 
 async function fetchGithub() {
   const response = await fetch(
-    `https://api.github.com/search/issues?q=author%3A${config.user}+archived%3Afalse`
+    `https://api.github.com/search/issues?q=author%3A${username}+archived%3Afalse`
   );
   if (!response.ok) {
     const message = `The server responded with a status of ${response.status}`;
