@@ -7,11 +7,12 @@ let globalData = [];
 fetchGithub()
   .then((data) => {
     globalData = data.items;
-    createCards(data.items, 'all');
+    createCards(data.items, 'All Repositories');
     createDatalist(data.items);
   })
   .catch((error) => {
     console.log(error);
+    displayError(error);
   });
 
 async function fetchGithub() {
@@ -19,13 +20,19 @@ async function fetchGithub() {
     `https://api.github.com/search/issues?q=author%3A${config.user}+archived%3Afalse`
   );
   if (!response.ok) {
-    const message = `An error has occured: ${response.status}`;
+    const message = `The server responded with a status of ${response.status}`;
     throw new Error(message);
   }
   const cards = await response.json();
   return cards;
 }
 
+function displayError(message) {
+  let loaders = document.querySelectorAll('.loading-container');
+  for (let i = 0; i < loaders.length; ++i) {
+    loaders[i].innerHTML = `<p>${message}</p>`;
+  }
+}
 function createLabels(labels) {
   return `
   <div class="tag-container">
@@ -54,7 +61,7 @@ function constructCard(id, title, labels, posted, users, url) {
   </div>`;
 }
 function createCards(data, repo) {
-  if (repo !== 'all') {
+  if (repo !== 'All Repositories') {
     data = data.filter((element) => {
       return element.repository_url.includes(repo);
     });
@@ -68,7 +75,6 @@ function createCards(data, repo) {
   let openIssueCount = 0;
   let closedIssueCount = 0;
   data.forEach((element) => {
-    console.log(element);
     let recentDate = new Date(element.created_at);
     const newDate =
       recentDate.getUTCDate() +
@@ -128,7 +134,6 @@ function createDatalist(data) {
       element.repository_url.lastIndexOf('/') + 1
     );
     optionElement.value = repoName;
-    optionElement.actualValue = 'fuck';
     if (reposList.includes(repoName) === false) {
       repos.appendChild(optionElement);
       reposList.push(repoName);

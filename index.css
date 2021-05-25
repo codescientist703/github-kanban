@@ -182,6 +182,35 @@ footer {
   background: var(--light-bg-color);
   padding: 1.2rem 0;
 }
+
+/* creating css loader */
+
+.loading-container {
+  height: 70vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.loading {
+  width: 2rem;
+  height: 2rem;
+  border: 5px solid #f3f3f3;
+  border-top: 6px solid #9c41f2;
+  border-radius: 100%;
+  margin: auto;
+  visibility: visible;
+  animation: spin 1s infinite linear;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 @media only screen and (min-width: 768px) {
   .container {
     grid-template-columns: 1fr 1fr;
