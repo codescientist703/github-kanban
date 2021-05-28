@@ -47,12 +47,17 @@ a {
 
 /* Header Component  */
 
+.main-title {
+  cursor: pointer;
+}
 .header {
   text-align: center;
   padding: 0.9rem;
   background: var(--light-bg-color);
   border-bottom: 2px solid var(--primary-color);
   margin-bottom: 1.5rem;
+  display: flex;
+  justify-content: center;
 }
 .main-icon {
   margin-right: 1rem;

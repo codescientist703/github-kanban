@@ -17,7 +17,7 @@
 	</head>
 	<body>
 		<div class="header">
-			<h1><i class="fas fa-chart-bar main-icon"></i>Github Kanban Chart</h1>
+			<h1 class="main-title"><i class="fas fa-chart-bar main-icon"></i>Github Kanban Chart</h1>
 		</div>
 		<div class="content">
 			<h2 class="content-heading">----Select any repository----</h2>
@@ -25,15 +25,14 @@
 				<i class="fas fa-hand-point-down hand-icon"></i>
 			</div>
 			<div class="repo-container">
-				<input
-					list="repos"
-					placeholder="Select any repository"
-					id="input"
-					oninput="onInput()"
-				/>
-				<datalist id="repos">
-					<option value="All Repositories"></option>
-				</datalist>
+				<div>
+					<input
+						list="repos"
+						placeholder="Select any repository"
+						id="input"
+					/>
+					<button class="btn" style="width: initial">Submit</button>
+				</div>
 			</div>
 			<div class="container">
 				<div class="board-col1">

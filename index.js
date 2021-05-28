@@ -2,7 +2,6 @@ const openPr = document.getElementById('open-pr');
 const closedPr = document.getElementById('closed-pr');
 const openIssue = document.getElementById('open-issue');
 const closedIssue = document.getElementById('closed-issue');
-const repos = document.getElementById('repos');
 let username;
 let globalData = [];
 let repo = 'All Repositories';
@@ -11,6 +10,7 @@ const elements = ['open-pr', 'closed-pr', 'open-issue', 'closed-issue'];
 const loadingElement = `<div class="loading-container">
 <div class="loading" ></div></div>`;
 
+// Checking param in URL
 const params = new URLSearchParams(window.location.search);
 if (params.has('user')) {
   username = params.get('user');
@@ -100,8 +100,9 @@ async function updatePage(columnName) {
     console.log(error);
   }
 }
+
 initPage();
-createDatalist();
+
 function setLoading(isLoad) {
   if (isLoad) {
     elements.forEach((element) => {
@@ -120,7 +121,7 @@ function createUrl(columnName) {
     return repoUrl;
   }
   let url = githubData[columnName].apiUrl;
-  if (repo !== 'All Repositories') {
+  if (repo !== 'All Repositories' && repo !== '') {
     url += `+repo%3A${repo}`;
   }
   url += `&page=${githubData[columnName].page}`;
@@ -128,12 +129,15 @@ function createUrl(columnName) {
 }
 
 async function fetchGithub(url) {
+  let mainHeader = {};
+  if ('token' in config) {
+    mainHeader = {
+      authorization: `token ${config.token}`,
+    };
+  }
   const response = await fetch(url, {
-    headers: {
-      authorization: 'token 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',
-    },
+    headers: mainHeader,
   });
-
   if (!response.ok) {
     const message = `The server responded with a status of ${response.status}`;
     throw new Error(message);
@@ -148,6 +152,7 @@ function displayError(message) {
     loaders[i].innerHTML = `<p>${message}</p>`;
   }
 }
+
 function createLabels(labels) {
   return `
 	<div class="tag-container">
@@ -162,6 +167,7 @@ function createLabels(labels) {
 	</div>
 	`;
 }
+
 function constructCard(id, title, labels, posted, users, url) {
   return `<div class="card">
 	<a href=${url} target="_blank">
@@ -175,6 +181,7 @@ function constructCard(id, title, labels, posted, users, url) {
 	</a>
 	</div>`;
 }
+
 function createCards(columnName) {
   let cardsString = ``;
   githubData[columnName].data.forEach((element) => {
@@ -211,18 +218,6 @@ function createCards(columnName) {
   ).textContent = `${githubData[columnName].title} (${githubData[columnName].total})`;
 }
 
-async function createDatalist() {
-  try {
-    const response = await fetchGithub(createUrl('repo'));
-    response.forEach((element) => {
-      let optionElement = document.createElement('option');
-      optionElement.value = element.full_name;
-      repos.appendChild(optionElement);
-    });
-  } catch (error) {
-    console.log(error);
-  }
-}
 function lightOrDark(color) {
   var r, g, b, hsp;
   if (color.match(/^rgb/)) {
@@ -249,24 +244,24 @@ function lightOrDark(color) {
     return 'dark';
   }
 }
-function onInput() {
-  let val = document.getElementById('input').value;
-  let opts = document.getElementById('repos').childNodes;
-  for (let i = 0; i < opts.length; i++) {
-    if (opts[i].value === val) {
-      repo = val;
-      elements.forEach((item) => {
-        githubData[item].page = 1;
-      });
-      initPage();
-      break;
-    }
-  }
-}
+
+//Event Handlers
+
 document.addEventListener('click', function (e) {
   if (e.target.innerText === 'Load more') {
     const columnName = e.target.id.replace('-load', '');
     document.getElementById(e.target.id).textContent = 'Loading...';
     updatePage(columnName);
+  } else if (e.target.innerText === 'Submit') {
+    const value = document.getElementById('input').value;
+    repo = value;
+    elements.forEach((item) => {
+      githubData[item].page = 1;
+    });
+    initPage();
   }
+});
+
+document.querySelector('.main-title').addEventListener('click', function () {
+  location.reload();
 });
