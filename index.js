@@ -13,20 +13,80 @@ if (params.has('user')) {
   username = config.user;
 }
 
-fetchGithub()
-  .then((data) => {
-    globalData = data.items;
-    createCards(data.items, 'All Repositories');
-    createDatalist(data.items);
-  })
-  .catch((error) => {
-    displayError(error);
-  });
+let githubData = {
+  'open-pr': {
+    element: openPr,
+    title: 'Open Pull Requests',
+    data: [],
+    apiUrl: `https://api.github.com/search/issues?q=is%3Apr+author%3A${username}+archived%3Afalse+is%3Aopen`,
+    page: 1,
+  },
+  'closed-pr': {
+    element: closedPr,
+    title: 'Closed Pull Requests',
+    data: [],
+    apiUrl: `https://api.github.com/search/issues?q=is%3Apr+author%3A${username}+archived%3Afalse+is%3Aclosed`,
+    page: 1,
+  },
+  'open-issue': {
+    element: openIssue,
+    title: 'Open Issues',
+    data: [],
+    apiUrl: `https://api.github.com/search/issues?q=is%3Aissue+author%3A${username}+archived%3Afalse+is%3Aopen`,
+    page: 1,
+  },
+  'closed-issue': {
+    element: closedIssue,
+    title: 'Closed Issues',
+    data: [],
+    apiUrl: `https://api.github.com/search/issues?q=is%3Aissue+author%3A${username}+archived%3Afalse+is%3Aclosed`,
+    page: 1,
+  },
+};
 
-async function fetchGithub() {
-  const response = await fetch(
-    `https://api.github.com/search/issues?q=author%3A${username}+archived%3Afalse`
-  );
+const elements = ['open-pr', 'closed-pr', 'open-issue', 'closed-issue'];
+const loadingElement = `<div class="loading-container">
+												<div class="loading" ></div>
+												</div>`;
+async function initPage() {
+  setLoading(true);
+  try {
+    let [openPrData, closedPrData, openIssueData, closedIssueData] =
+      await Promise.all(elements.map((data) => fetchGithub(data)));
+
+    githubData['open-pr'].data = openPrData.items;
+    githubData['closed-pr'].data = closedPrData.items;
+    githubData['open-issue'].data = openIssueData.items;
+    githubData['closed-issue'].data = closedIssueData.items;
+    setLoading(false);
+    elements.forEach((item) => {
+      createCards(item, 'All Repositories');
+    });
+  } catch (error) {
+    displayError(error);
+  }
+}
+
+initPage();
+
+function setLoading(isLoad) {
+  if (isLoad) {
+    elements.forEach((element) => {
+      githubData[element].element.innerHTML = loadingElement;
+    });
+  } else {
+    let loaders = document.querySelectorAll('.loading-container');
+    for (let i = 0; i < loaders.length; ++i) {
+      loaders[i].remove();
+    }
+  }
+}
+async function fetchGithub(columnName) {
+  const response = await fetch(githubData[columnName].apiUrl, {
+    headers: {
+      authorization: 'token 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',
+    },
+  });
   if (!response.ok) {
     const message = `The server responded with a status of ${response.status}`;
     throw new Error(message);
@@ -68,21 +128,17 @@ function constructCard(id, title, labels, posted, users, url) {
 	</a>
 	</div>`;
 }
-function createCards(data, repo) {
+function createCards(columnName, repo) {
   if (repo !== 'All Repositories') {
-    data = data.filter((element) => {
-      return element.repository_url.includes(repo);
-    });
+    githubData[columnName].data = githubData[columnName].data.filter(
+      (element) => {
+        return element.repository_url.includes(repo);
+      }
+    );
   }
-  let prOpenCardsString = ``;
-  let prClosedCardsString = ``;
-  let issueClosedCardsString = ``;
-  let issueOpenCardsString = ``;
-  let openPrCount = 0;
-  let closedPrCount = 0;
-  let openIssueCount = 0;
-  let closedIssueCount = 0;
-  data.forEach((element) => {
+  let cardsString = ``;
+  let cardCount = 0;
+  githubData[columnName].data.forEach((element) => {
     let recentDate = new Date(element.created_at);
     const newDate =
       recentDate.getUTCDate() +
@@ -98,40 +154,14 @@ function createCards(data, repo) {
       element.comments,
       element.html_url
     );
-    if (element.html_url.includes('issues')) {
-      if (element.state === 'open') {
-        issueOpenCardsString += cardString;
-        openIssueCount++;
-      } else {
-        issueClosedCardsString += cardString;
-        closedIssueCount++;
-      }
-    } else {
-      if (element.state === 'open') {
-        prOpenCardsString += cardString;
-        openPrCount++;
-      } else {
-        prClosedCardsString += cardString;
-        closedPrCount++;
-      }
-    }
+    cardsString += cardString;
+    cardCount++;
   });
-  openPr.innerHTML = prOpenCardsString;
-  closedPr.innerHTML = prClosedCardsString;
-  openIssue.innerHTML = issueOpenCardsString;
-  closedIssue.innerHTML = issueClosedCardsString;
+  githubData[columnName].element.innerHTML =
+    githubData[columnName].element.innerHTML + cardsString;
   document.getElementById(
-    'open-pr-count'
-  ).textContent = `Open Pull Requests (${openPrCount})`;
-  document.getElementById(
-    'closed-pr-count'
-  ).textContent = `Closed Pull Requests (${closedPrCount})`;
-  document.getElementById(
-    'open-issue-count'
-  ).textContent = `Open Issues (${openIssueCount})`;
-  document.getElementById(
-    'closed-issue-count'
-  ).textContent = `Closed Issues (${closedIssueCount})`;
+    `${columnName}-count`
+  ).textContent = `${githubData[columnName].title} (${cardCount})`;
 }
 
 function createDatalist(data) {

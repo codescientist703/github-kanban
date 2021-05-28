@@ -201,6 +201,7 @@ footer {
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 0.8rem;
 }
 .loading {
   width: 2rem;
@@ -210,6 +211,7 @@ footer {
   border-radius: 100%;
   margin: auto;
   visibility: visible;
+
   animation: spin 1s infinite linear;
 }
 
