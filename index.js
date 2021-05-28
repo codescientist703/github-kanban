@@ -5,6 +5,7 @@ const closedIssue = document.getElementById('closed-issue');
 const repos = document.getElementById('repos');
 let username;
 let globalData = [];
+let repo = 'All Repositories';
 
 const elements = ['open-pr', 'closed-pr', 'open-issue', 'closed-issue'];
 const loadingElement = `<div class="loading-container">
@@ -16,6 +17,7 @@ if (params.has('user')) {
 } else {
   username = config.user;
 }
+const repoUrl = `https://api.github.com/users/${username}/repos?type=owner`;
 
 let githubData = {
   'open-pr': {
@@ -60,27 +62,27 @@ async function initPage() {
   setLoading(true);
   try {
     let [openPrData, closedPrData, openIssueData, closedIssueData] =
-      await Promise.all(elements.map((data) => fetchGithub(data)));
+      await Promise.all(elements.map((data) => fetchGithub(createUrl(data))));
 
     githubData['open-pr'].data = openPrData.items;
     githubData['open-pr'].total = openPrData.total_count;
-    githubData['open-pr'].cur += openPrData.items.length;
+    githubData['open-pr'].cur = openPrData.items.length;
 
     githubData['closed-pr'].data = closedPrData.items;
     githubData['closed-pr'].total = closedPrData.total_count;
-    githubData['closed-pr'].cur += closedPrData.items.length;
+    githubData['closed-pr'].cur = closedPrData.items.length;
 
     githubData['open-issue'].data = openIssueData.items;
     githubData['open-issue'].total = openIssueData.total_count;
-    githubData['open-issue'].cur += openIssueData.items.length;
+    githubData['open-issue'].cur = openIssueData.items.length;
 
     githubData['closed-issue'].data = closedIssueData.items;
     githubData['closed-issue'].total = closedIssueData.total_count;
-    githubData['closed-issue'].cur += closedIssueData.items.length;
+    githubData['closed-issue'].cur = closedIssueData.items.length;
 
     setLoading(false);
     elements.forEach((item) => {
-      createCards(item, 'All Repositories');
+      createCards(item);
       githubData[item].page++;
     });
   } catch (error) {
@@ -89,18 +91,17 @@ async function initPage() {
 }
 async function updatePage(columnName) {
   try {
-    const response = await fetchGithub(columnName);
+    const response = await fetchGithub(createUrl(columnName));
     githubData[columnName].data = response.items;
-    console.log(githubData[columnName].data);
     githubData[columnName].cur += response.items.length;
-    createCards(columnName, 'All Repositories');
+    createCards(columnName);
     githubData[columnName].page++;
   } catch (error) {
     console.log(error);
   }
 }
-initPage('All Repositories');
-
+initPage();
+createDatalist();
 function setLoading(isLoad) {
   if (isLoad) {
     elements.forEach((element) => {
@@ -113,15 +114,26 @@ function setLoading(isLoad) {
     }
   }
 }
-async function fetchGithub(columnName) {
-  const response = await fetch(
-    `${githubData[columnName].apiUrl}&page=${githubData[columnName].page}`,
-    {
-      headers: {
-        authorization: 'token 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',
-      },
-    }
-  );
+
+function createUrl(columnName) {
+  if (columnName === 'repo') {
+    return repoUrl;
+  }
+  let url = githubData[columnName].apiUrl;
+  if (repo !== 'All Repositories') {
+    url += `+repo%3A${repo}`;
+  }
+  url += `&page=${githubData[columnName].page}`;
+  return url;
+}
+
+async function fetchGithub(url) {
+  const response = await fetch(url, {
+    headers: {
+      authorization: 'token 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',
+    },
+  });
+
   if (!response.ok) {
     const message = `The server responded with a status of ${response.status}`;
     throw new Error(message);
@@ -163,14 +175,7 @@ function constructCard(id, title, labels, posted, users, url) {
 	</a>
 	</div>`;
 }
-function createCards(columnName, repo) {
-  if (repo !== 'All Repositories') {
-    githubData[columnName].data = githubData[columnName].data.filter(
-      (element) => {
-        return element.repository_url.includes(repo);
-      }
-    );
-  }
+function createCards(columnName) {
   let cardsString = ``;
   githubData[columnName].data.forEach((element) => {
     let recentDate = new Date(element.created_at);
@@ -194,11 +199,9 @@ function createCards(columnName, repo) {
     cardsString += `<div style='margin: 0.5rem'>
 		<button class='btn' id='${columnName}-load'>Load more</button><div>`;
   }
-  try {
+  if (githubData[columnName].page > 1) {
     let d_nested = document.getElementById(`${columnName}-load`);
     d_nested.remove();
-  } catch (error) {
-    console.log(error);
   }
 
   githubData[columnName].element.innerHTML =
@@ -208,19 +211,17 @@ function createCards(columnName, repo) {
   ).textContent = `${githubData[columnName].title} (${githubData[columnName].total})`;
 }
 
-function createDatalist(data) {
-  reposList = [];
-  data.forEach((element) => {
-    let optionElement = document.createElement('option');
-    repoName = element.repository_url.substring(
-      element.repository_url.lastIndexOf('/') + 1
-    );
-    optionElement.value = repoName;
-    if (reposList.includes(repoName) === false) {
+async function createDatalist() {
+  try {
+    const response = await fetchGithub(createUrl('repo'));
+    response.forEach((element) => {
+      let optionElement = document.createElement('option');
+      optionElement.value = element.full_name;
       repos.appendChild(optionElement);
-      reposList.push(repoName);
-    }
-  });
+    });
+  } catch (error) {
+    console.log(error);
+  }
 }
 function lightOrDark(color) {
   var r, g, b, hsp;
@@ -253,7 +254,11 @@ function onInput() {
   let opts = document.getElementById('repos').childNodes;
   for (let i = 0; i < opts.length; i++) {
     if (opts[i].value === val) {
-      createCards(globalData, val);
+      repo = val;
+      elements.forEach((item) => {
+        githubData[item].page = 1;
+      });
+      initPage();
       break;
     }
   }
@@ -263,6 +268,5 @@ document.addEventListener('click', function (e) {
     const columnName = e.target.id.replace('-load', '');
     document.getElementById(e.target.id).textContent = 'Loading...';
     updatePage(columnName);
-    console.log(columnName);
   }
 });
