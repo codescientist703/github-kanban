@@ -17,16 +17,14 @@
 
 ## Demo
 
-[https://codescientist703.github.io/github-kanban/](https://codescientist703.github.io/github-kanban/)
+[https://codescientist703.github.io/kanban-chart/](https://codescientist703.github.io/kanban-chart/)
 
-In the URL type https://codescientist703.github.io/github-kanban/?user=your_username and replace your_username with your github username to get your own personalized page which you can show off to anyone.
+In the URL type https://codescientist703.github.io/kanban-chart/?user=your_username and replace your_username with your github username to get your own personalized page which you can show off to anyone.
 
 ## Built with
 
 - HTML - For the web framework
 - CSS - For styling components
 - JavaScript - For all the logic
-
-### All contributions are welcomed !
 
 ### Please also consider giving it a star if you find it useful :)
