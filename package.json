@@ -1,0 +1,11 @@
+{
+  "name": "github-kanban",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/codescientist703/github-kanban"
+  },
+  "version": "1.0.0",
+  "description": "Easily share your open source contribution in the form of visually attractive kanban chart.",
+  "main": "index.js",
+  "author": "codescientist703"
+}

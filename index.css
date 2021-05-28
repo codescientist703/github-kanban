@@ -1,0 +1,270 @@
+@import url('https://fonts.googleapis.com/css2?family=Mulish:wght@400;500;600;700&display=swap');
+
+:root {
+  --bg-color: #0b132b;
+  --primary-color: #3a506b;
+  --secondary-color: #5bc0be;
+  --light-bg-color: #1c2541;
+  --font-color: #6fffe9;
+}
+* {
+  box-sizing: border-box;
+  outline: 0;
+  border: 0;
+  font-family: 'Mulish', sans-serif;
+  margin: 0;
+  padding: 0;
+  scroll-behavior: smooth;
+}
+body {
+  background: var(--bg-color);
+  color: var(--font-color);
+}
+p,
+div {
+  color: var(--font-color);
+}
+h1,
+h2,
+h3 {
+  color: var(--font-color);
+}
+h1 {
+  font-size: 1.5rem;
+}
+h2 {
+  font-size: 1.3rem;
+}
+ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+a {
+  text-decoration: none;
+  color: var(--font-color);
+}
+
+/* Header Component  */
+
+.main-title {
+  cursor: pointer;
+}
+.header {
+  text-align: center;
+  padding: 0.9rem;
+  background: var(--light-bg-color);
+  border-bottom: 2px solid var(--primary-color);
+  margin-bottom: 1.5rem;
+  display: flex;
+  justify-content: center;
+}
+.main-icon {
+  margin-right: 1rem;
+  color: var(--secondary-color);
+}
+
+.content-heading {
+  text-align: center;
+  font-weight: 400;
+  margin-bottom: 1rem;
+}
+.hand-icon {
+  margin-bottom: 0.5rem;
+  font-size: 20px;
+  text-align: center;
+}
+
+input {
+  border: 3px solid var(--primary-color);
+  width: 100%;
+  height: 40px;
+  border-radius: 10px;
+  padding: 0.8rem;
+  margin: 0rem 1rem;
+  color: var(--font-color);
+  background: var(--light-bg-color);
+}
+
+/* Grid and container component */
+
+.container {
+  display: grid;
+  grid-template-areas:
+    'one'
+    'two'
+    'three'
+    'four';
+  column-gap: 1.5rem;
+  padding: 0rem 1rem;
+  margin-bottom: 2rem;
+  row-gap: 1.5rem;
+}
+.board-col1 {
+  grid-area: one;
+}
+.board-col2 {
+  grid-area: two;
+}
+.board-col3 {
+  grid-area: three;
+}
+.board-col4 {
+  grid-area: four;
+}
+.board-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem;
+  border: 2px solid var(--primary-color);
+  border-bottom: 0;
+  border-radius: 5px;
+}
+.board-content {
+  border: 2px solid var(--primary-color);
+  border-radius: 5px;
+}
+.col-heading {
+  margin-right: auto;
+  color: var(--font-color);
+}
+.col-icon {
+  margin-right: auto;
+  font-size: 20px;
+  padding: 6px;
+  color: var(--secondary-color);
+  padding-right: 0.6rem;
+}
+
+/* Card Component */
+
+.card {
+  padding: 0.8rem;
+  color: inherit;
+  background: var(--light-bg-color);
+  margin: 0.5rem;
+  border-radius: 6px;
+}
+.card a {
+  display: block;
+  text-decoration: none;
+  color: initial;
+}
+.card p {
+  margin-bottom: 0.7rem;
+}
+.tag-container {
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 0.8rem;
+}
+.tag {
+  border-radius: 7px;
+  margin: 0.3rem;
+  border: 2px solid rgba(0, 0, 0, 0.5);
+  padding: 0.4rem;
+  font-size: 15px;
+}
+.card-footer {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+.card-footer i {
+  margin-right: 0.3rem;
+  color: var(--secondary-color);
+}
+.card-users {
+  color: var(--secondary-color);
+  margin-right: 0.7rem;
+}
+.card-time {
+  color: var(--secondary-color);
+}
+.repo-container {
+  display: flex;
+  justify-content: center;
+  justify-self: center;
+  margin-bottom: 2.2rem;
+}
+
+/* Footer Component */
+
+footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--light-bg-color);
+  padding: 1.2rem 0;
+}
+
+/* CSS Loader component */
+
+.loading-container {
+  height: 70vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.8rem;
+}
+.loading {
+  width: 2rem;
+  height: 2rem;
+  border: 5px solid #f3f3f3;
+  border-top: 6px solid #9c41f2;
+  border-radius: 100%;
+  margin: auto;
+  visibility: visible;
+
+  animation: spin 1s infinite linear;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+/* Button */
+.btn {
+  background: #6055e0;
+  color: var(--font-color);
+  font-size: 1rem;
+  padding: 0.5rem;
+  border-radius: 5px;
+  font-weight: 700;
+  width: 100%;
+  cursor: pointer;
+}
+
+/* Media Queries */
+
+@media only screen and (min-width: 768px) {
+  .container {
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+      'one two'
+      'three four';
+  }
+  h1 {
+    font-size: 2em;
+  }
+  h2 {
+    font-size: 1.5em;
+  }
+  input {
+    width: 270px;
+  }
+}
+
+@media only screen and (min-width: 992px) {
+  .container {
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-areas: 'one two three four';
+    grid-auto-rows: min-content;
+    padding: 0rem 1.5rem;
+  }
+}
