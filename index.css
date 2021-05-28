@@ -47,17 +47,12 @@ a {
 
 /* Header Component  */
 
-.main-title {
-  cursor: pointer;
-}
 .header {
   text-align: center;
   padding: 0.9rem;
   background: var(--light-bg-color);
   border-bottom: 2px solid var(--primary-color);
   margin-bottom: 1.5rem;
-  display: flex;
-  justify-content: center;
 }
 .main-icon {
   margin-right: 1rem;
@@ -206,7 +201,6 @@ footer {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0.8rem;
 }
 .loading {
   width: 2rem;
@@ -216,7 +210,6 @@ footer {
   border-radius: 100%;
   margin: auto;
   visibility: visible;
-
   animation: spin 1s infinite linear;
 }
 
@@ -227,17 +220,6 @@ footer {
   to {
     transform: rotate(360deg);
   }
-}
-/* Button */
-.btn {
-  background: #6055e0;
-  color: var(--font-color);
-  font-size: 1rem;
-  padding: 0.5rem;
-  border-radius: 5px;
-  font-weight: 700;
-  width: 100%;
-  cursor: pointer;
 }
 
 /* Media Queries */
