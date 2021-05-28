@@ -2,31 +2,142 @@ const openPr = document.getElementById('open-pr');
 const closedPr = document.getElementById('closed-pr');
 const openIssue = document.getElementById('open-issue');
 const closedIssue = document.getElementById('closed-issue');
-const repos = document.getElementById('repos');
 let username;
 let globalData = [];
+let repo = 'All Repositories';
 
+const elements = ['open-pr', 'closed-pr', 'open-issue', 'closed-issue'];
+const loadingElement = `<div class="loading-container">
+<div class="loading" ></div></div>`;
+
+// Checking param in URL
 const params = new URLSearchParams(window.location.search);
 if (params.has('user')) {
   username = params.get('user');
 } else {
   username = config.user;
 }
+const repoUrl = `https://api.github.com/users/${username}/repos?type=owner`;
 
-fetchGithub()
-  .then((data) => {
-    globalData = data.items;
-    createCards(data.items, 'All Repositories');
-    createDatalist(data.items);
-  })
-  .catch((error) => {
+let githubData = {
+  'open-pr': {
+    element: openPr,
+    title: 'Open Pull Requests',
+    data: [],
+    apiUrl: `https://api.github.com/search/issues?q=is%3Apr+author%3A${username}+archived%3Afalse+is%3Aopen`,
+    page: 1,
+    total: 0,
+    cur: 0,
+  },
+  'closed-pr': {
+    element: closedPr,
+    title: 'Closed Pull Requests',
+    data: [],
+    apiUrl: `https://api.github.com/search/issues?q=is%3Apr+author%3A${username}+archived%3Afalse+is%3Aclosed`,
+    page: 1,
+    total: 0,
+    cur: 0,
+  },
+  'open-issue': {
+    element: openIssue,
+    title: 'Open Issues',
+    data: [],
+    apiUrl: `https://api.github.com/search/issues?q=is%3Aissue+author%3A${username}+archived%3Afalse+is%3Aopen`,
+    page: 1,
+    total: 0,
+    cur: 0,
+  },
+  'closed-issue': {
+    element: closedIssue,
+    title: 'Closed Issues',
+    data: [],
+    apiUrl: `https://api.github.com/search/issues?q=is%3Aissue+author%3A${username}+archived%3Afalse+is%3Aclosed`,
+    page: 1,
+    total: 0,
+    cur: 0,
+  },
+};
+
+async function initPage() {
+  setLoading(true);
+  try {
+    let [openPrData, closedPrData, openIssueData, closedIssueData] =
+      await Promise.all(elements.map((data) => fetchGithub(createUrl(data))));
+
+    githubData['open-pr'].data = openPrData.items;
+    githubData['open-pr'].total = openPrData.total_count;
+    githubData['open-pr'].cur = openPrData.items.length;
+
+    githubData['closed-pr'].data = closedPrData.items;
+    githubData['closed-pr'].total = closedPrData.total_count;
+    githubData['closed-pr'].cur = closedPrData.items.length;
+
+    githubData['open-issue'].data = openIssueData.items;
+    githubData['open-issue'].total = openIssueData.total_count;
+    githubData['open-issue'].cur = openIssueData.items.length;
+
+    githubData['closed-issue'].data = closedIssueData.items;
+    githubData['closed-issue'].total = closedIssueData.total_count;
+    githubData['closed-issue'].cur = closedIssueData.items.length;
+
+    setLoading(false);
+    elements.forEach((item) => {
+      createCards(item);
+      githubData[item].page++;
+    });
+  } catch (error) {
     displayError(error);
-  });
+  }
+}
+async function updatePage(columnName) {
+  try {
+    const response = await fetchGithub(createUrl(columnName));
+    githubData[columnName].data = response.items;
+    githubData[columnName].cur += response.items.length;
+    createCards(columnName);
+    githubData[columnName].page++;
+  } catch (error) {
+    console.log(error);
+  }
+}
 
-async function fetchGithub() {
-  const response = await fetch(
-    `https://api.github.com/search/issues?q=author%3A${username}+archived%3Afalse`
-  );
+initPage();
+
+function setLoading(isLoad) {
+  if (isLoad) {
+    elements.forEach((element) => {
+      githubData[element].element.innerHTML = loadingElement;
+    });
+  } else {
+    let loaders = document.querySelectorAll('.loading-container');
+    for (let i = 0; i < loaders.length; ++i) {
+      loaders[i].remove();
+    }
+  }
+}
+
+function createUrl(columnName) {
+  if (columnName === 'repo') {
+    return repoUrl;
+  }
+  let url = githubData[columnName].apiUrl;
+  if (repo !== 'All Repositories' && repo !== '') {
+    url += `+repo%3A${repo}`;
+  }
+  url += `&page=${githubData[columnName].page}`;
+  return url;
+}
+
+async function fetchGithub(url) {
+  let mainHeader = {};
+  if ('token' in config) {
+    mainHeader = {
+      authorization: `token ${config.token}`,
+    };
+  }
+  const response = await fetch(url, {
+    headers: mainHeader,
+  });
   if (!response.ok) {
     const message = `The server responded with a status of ${response.status}`;
     throw new Error(message);
@@ -41,6 +152,7 @@ function displayError(message) {
     loaders[i].innerHTML = `<p>${message}</p>`;
   }
 }
+
 function createLabels(labels) {
   return `
 	<div class="tag-container">
@@ -55,6 +167,7 @@ function createLabels(labels) {
 	</div>
 	`;
 }
+
 function constructCard(id, title, labels, posted, users, url) {
   return `<div class="card">
 	<a href=${url} target="_blank">
@@ -68,21 +181,10 @@ function constructCard(id, title, labels, posted, users, url) {
 	</a>
 	</div>`;
 }
-function createCards(data, repo) {
-  if (repo !== 'All Repositories') {
-    data = data.filter((element) => {
-      return element.repository_url.includes(repo);
-    });
-  }
-  let prOpenCardsString = ``;
-  let prClosedCardsString = ``;
-  let issueClosedCardsString = ``;
-  let issueOpenCardsString = ``;
-  let openPrCount = 0;
-  let closedPrCount = 0;
-  let openIssueCount = 0;
-  let closedIssueCount = 0;
-  data.forEach((element) => {
+
+function createCards(columnName) {
+  let cardsString = ``;
+  githubData[columnName].data.forEach((element) => {
     let recentDate = new Date(element.created_at);
     const newDate =
       recentDate.getUTCDate() +
@@ -98,56 +200,24 @@ function createCards(data, repo) {
       element.comments,
       element.html_url
     );
-    if (element.html_url.includes('issues')) {
-      if (element.state === 'open') {
-        issueOpenCardsString += cardString;
-        openIssueCount++;
-      } else {
-        issueClosedCardsString += cardString;
-        closedIssueCount++;
-      }
-    } else {
-      if (element.state === 'open') {
-        prOpenCardsString += cardString;
-        openPrCount++;
-      } else {
-        prClosedCardsString += cardString;
-        closedPrCount++;
-      }
-    }
+    cardsString += cardString;
   });
-  openPr.innerHTML = prOpenCardsString;
-  closedPr.innerHTML = prClosedCardsString;
-  openIssue.innerHTML = issueOpenCardsString;
-  closedIssue.innerHTML = issueClosedCardsString;
+  if (githubData[columnName].cur !== githubData[columnName].total) {
+    cardsString += `<div style='margin: 0.5rem'>
+		<button class='btn' id='${columnName}-load'>Load more</button><div>`;
+  }
+  if (githubData[columnName].page > 1) {
+    let d_nested = document.getElementById(`${columnName}-load`);
+    d_nested.remove();
+  }
+
+  githubData[columnName].element.innerHTML =
+    githubData[columnName].element.innerHTML + cardsString;
   document.getElementById(
-    'open-pr-count'
-  ).textContent = `Open Pull Requests (${openPrCount})`;
-  document.getElementById(
-    'closed-pr-count'
-  ).textContent = `Closed Pull Requests (${closedPrCount})`;
-  document.getElementById(
-    'open-issue-count'
-  ).textContent = `Open Issues (${openIssueCount})`;
-  document.getElementById(
-    'closed-issue-count'
-  ).textContent = `Closed Issues (${closedIssueCount})`;
+    `${columnName}-count`
+  ).textContent = `${githubData[columnName].title} (${githubData[columnName].total})`;
 }
 
-function createDatalist(data) {
-  reposList = [];
-  data.forEach((element) => {
-    let optionElement = document.createElement('option');
-    repoName = element.repository_url.substring(
-      element.repository_url.lastIndexOf('/') + 1
-    );
-    optionElement.value = repoName;
-    if (reposList.includes(repoName) === false) {
-      repos.appendChild(optionElement);
-      reposList.push(repoName);
-    }
-  });
-}
 function lightOrDark(color) {
   var r, g, b, hsp;
   if (color.match(/^rgb/)) {
@@ -174,13 +244,24 @@ function lightOrDark(color) {
     return 'dark';
   }
 }
-function onInput() {
-  let val = document.getElementById('input').value;
-  let opts = document.getElementById('repos').childNodes;
-  for (let i = 0; i < opts.length; i++) {
-    if (opts[i].value === val) {
-      createCards(globalData, val);
-      break;
-    }
+
+//Event Handlers
+
+document.addEventListener('click', function (e) {
+  if (e.target.innerText === 'Load more') {
+    const columnName = e.target.id.replace('-load', '');
+    document.getElementById(e.target.id).textContent = 'Loading...';
+    updatePage(columnName);
+  } else if (e.target.innerText === 'Submit') {
+    const value = document.getElementById('input').value;
+    repo = value;
+    elements.forEach((item) => {
+      githubData[item].page = 1;
+    });
+    initPage();
   }
-}
+});
+
+document.querySelector('.main-title').addEventListener('click', function () {
+  location.reload();
+});
