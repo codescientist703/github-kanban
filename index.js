@@ -43,8 +43,8 @@ function displayError(message) {
 }
 function createLabels(labels) {
   return `
-  <div class="tag-container">
-  ${labels
+	<div class="tag-container">
+	${labels
     .map(
       (item) =>
         `<div class="tag" style="background: #${item.color}; color: ${
@@ -52,21 +52,21 @@ function createLabels(labels) {
         }">${item.name}</div>`
     )
     .join('')}
-  </div>
-  `;
+	</div>
+	`;
 }
 function constructCard(id, title, labels, posted, users, url) {
   return `<div class="card">
-  <a href=${url} target="_blank">
-  <p>#${id}</p><p>${title}</p>
-  ${labels.length > 0 ? createLabels(labels) : ''}
-  <div class="card-footer">
-  <i class="fa fa-comment"></i>
-  <div class="card-users">${users}</div>
-  <div class="card-time">${posted}</div>
-  </div>
-  </a>
-  </div>`;
+	<a href=${url} target="_blank">
+	<p>#${id}</p><p>${title}</p>
+	${labels.length > 0 ? createLabels(labels) : ''}
+	<div class="card-footer">
+	<i class="fa fa-comment"></i>
+	<div class="card-users">${users}</div>
+	<div class="card-time">${posted}</div>
+	</div>
+	</a>
+	</div>`;
 }
 function createCards(data, repo) {
   if (repo !== 'All Repositories') {
