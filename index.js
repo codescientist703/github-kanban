@@ -131,9 +131,11 @@ function createUrl(columnName) {
 async function fetchGithub(url) {
   let mainHeader = {};
   if ('token' in config) {
-    mainHeader = {
-      authorization: `token ${config.token}`,
-    };
+    if (config.token !== '') {
+      mainHeader = {
+        authorization: `token ${config.token}`,
+      };
+    }
   }
   const response = await fetch(url, {
     headers: mainHeader,
