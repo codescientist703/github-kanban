@@ -223,6 +223,17 @@ footer {
     transform: rotate(360deg);
   }
 }
+/* Button */
+.btn {
+  background: #6055e0;
+  color: var(--font-color);
+  font-size: 1rem;
+  padding: 0.5rem;
+  border-radius: 5px;
+  font-weight: 700;
+  width: 100%;
+  cursor: pointer;
+}
 
 /* Media Queries */
 

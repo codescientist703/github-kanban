@@ -6,6 +6,10 @@ const repos = document.getElementById('repos');
 let username;
 let globalData = [];
 
+const elements = ['open-pr', 'closed-pr', 'open-issue', 'closed-issue'];
+const loadingElement = `<div class="loading-container">
+<div class="loading" ></div></div>`;
+
 const params = new URLSearchParams(window.location.search);
 if (params.has('user')) {
   username = params.get('user');
@@ -20,6 +24,8 @@ let githubData = {
     data: [],
     apiUrl: `https://api.github.com/search/issues?q=is%3Apr+author%3A${username}+archived%3Afalse+is%3Aopen`,
     page: 1,
+    total: 0,
+    cur: 0,
   },
   'closed-pr': {
     element: closedPr,
@@ -27,6 +33,8 @@ let githubData = {
     data: [],
     apiUrl: `https://api.github.com/search/issues?q=is%3Apr+author%3A${username}+archived%3Afalse+is%3Aclosed`,
     page: 1,
+    total: 0,
+    cur: 0,
   },
   'open-issue': {
     element: openIssue,
@@ -34,6 +42,8 @@ let githubData = {
     data: [],
     apiUrl: `https://api.github.com/search/issues?q=is%3Aissue+author%3A${username}+archived%3Afalse+is%3Aopen`,
     page: 1,
+    total: 0,
+    cur: 0,
   },
   'closed-issue': {
     element: closedIssue,
@@ -41,13 +51,11 @@ let githubData = {
     data: [],
     apiUrl: `https://api.github.com/search/issues?q=is%3Aissue+author%3A${username}+archived%3Afalse+is%3Aclosed`,
     page: 1,
+    total: 0,
+    cur: 0,
   },
 };
 
-const elements = ['open-pr', 'closed-pr', 'open-issue', 'closed-issue'];
-const loadingElement = `<div class="loading-container">
-												<div class="loading" ></div>
-												</div>`;
 async function initPage() {
   setLoading(true);
   try {
@@ -55,19 +63,43 @@ async function initPage() {
       await Promise.all(elements.map((data) => fetchGithub(data)));
 
     githubData['open-pr'].data = openPrData.items;
+    githubData['open-pr'].total = openPrData.total_count;
+    githubData['open-pr'].cur += openPrData.items.length;
+
     githubData['closed-pr'].data = closedPrData.items;
+    githubData['closed-pr'].total = closedPrData.total_count;
+    githubData['closed-pr'].cur += closedPrData.items.length;
+
     githubData['open-issue'].data = openIssueData.items;
+    githubData['open-issue'].total = openIssueData.total_count;
+    githubData['open-issue'].cur += openIssueData.items.length;
+
     githubData['closed-issue'].data = closedIssueData.items;
+    githubData['closed-issue'].total = closedIssueData.total_count;
+    githubData['closed-issue'].cur += closedIssueData.items.length;
+
     setLoading(false);
     elements.forEach((item) => {
       createCards(item, 'All Repositories');
+      githubData[item].page++;
     });
   } catch (error) {
     displayError(error);
   }
 }
-
-initPage();
+async function updatePage(columnName) {
+  try {
+    const response = await fetchGithub(columnName);
+    githubData[columnName].data = response.items;
+    console.log(githubData[columnName].data);
+    githubData[columnName].cur += response.items.length;
+    createCards(columnName, 'All Repositories');
+    githubData[columnName].page++;
+  } catch (error) {
+    console.log(error);
+  }
+}
+initPage('All Repositories');
 
 function setLoading(isLoad) {
   if (isLoad) {
@@ -82,11 +114,14 @@ function setLoading(isLoad) {
   }
 }
 async function fetchGithub(columnName) {
-  const response = await fetch(githubData[columnName].apiUrl, {
-    headers: {
-      authorization: 'token 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',
-    },
-  });
+  const response = await fetch(
+    `${githubData[columnName].apiUrl}&page=${githubData[columnName].page}`,
+    {
+      headers: {
+        authorization: 'token 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',
+      },
+    }
+  );
   if (!response.ok) {
     const message = `The server responded with a status of ${response.status}`;
     throw new Error(message);
@@ -137,7 +172,6 @@ function createCards(columnName, repo) {
     );
   }
   let cardsString = ``;
-  let cardCount = 0;
   githubData[columnName].data.forEach((element) => {
     let recentDate = new Date(element.created_at);
     const newDate =
@@ -155,13 +189,23 @@ function createCards(columnName, repo) {
       element.html_url
     );
     cardsString += cardString;
-    cardCount++;
   });
+  if (githubData[columnName].cur !== githubData[columnName].total) {
+    cardsString += `<div style='margin: 0.5rem'>
+		<button class='btn' id='${columnName}-load'>Load more</button><div>`;
+  }
+  try {
+    let d_nested = document.getElementById(`${columnName}-load`);
+    d_nested.remove();
+  } catch (error) {
+    console.log(error);
+  }
+
   githubData[columnName].element.innerHTML =
     githubData[columnName].element.innerHTML + cardsString;
   document.getElementById(
     `${columnName}-count`
-  ).textContent = `${githubData[columnName].title} (${cardCount})`;
+  ).textContent = `${githubData[columnName].title} (${githubData[columnName].total})`;
 }
 
 function createDatalist(data) {
@@ -214,3 +258,11 @@ function onInput() {
     }
   }
 }
+document.addEventListener('click', function (e) {
+  if (e.target.innerText === 'Load more') {
+    const columnName = e.target.id.replace('-load', '');
+    document.getElementById(e.target.id).textContent = 'Loading...';
+    updatePage(columnName);
+    console.log(columnName);
+  }
+});
