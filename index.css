@@ -153,6 +153,7 @@ input {
 }
 .card p {
   margin-bottom: 0.7rem;
+  word-wrap: break-word;
 }
 .tag-container {
   display: flex;
@@ -185,10 +186,14 @@ input {
 .repo-container {
   display: flex;
   justify-content: center;
-  justify-self: center;
+  align-content: center;
+  flex-wrap: wrap;
   margin-bottom: 2.2rem;
 }
 
+.repo-container .btn {
+  margin-top: 1.5rem;
+}
 /* Footer Component */
 
 footer {
@@ -234,12 +239,15 @@ footer {
   color: var(--font-color);
   font-size: 1rem;
   padding: 0.5rem;
-  border-radius: 5px;
+  border-radius: 6px;
   font-weight: 700;
   width: 100%;
   cursor: pointer;
 }
-
+.btn:hover {
+  background: #6055e070;
+  color: var(--secondary-color);
+}
 /* Media Queries */
 
 @media only screen and (min-width: 768px) {
@@ -257,6 +265,9 @@ footer {
   }
   input {
     width: 270px;
+  }
+  .repo-container .btn {
+    margin-top: 0rem;
   }
 }
 
