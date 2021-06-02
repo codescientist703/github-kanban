@@ -247,6 +247,7 @@ footer {
 .btn:hover {
   background: #6055e070;
   color: var(--secondary-color);
+  transition: all 0.3s ease-out;
 }
 /* Media Queries */
 
